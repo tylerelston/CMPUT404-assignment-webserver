@@ -7,6 +7,11 @@ See requirements.org (plain-text) for a description of the project.
 
 Make a simple webserver.
 
+References
+========================
+Decode bytes: Aaron Maenpaa
+https://stackoverflow.com/questions/606191/convert-bytes-to-a-string/606199#606199
+
 Contributors / Licensing
 ========================
 
