@@ -36,21 +36,35 @@ class MyWebServer(socketserver.BaseRequestHandler):
         self.parse(data.split())
 
     def parse(self, data):
+        if data[0].decode("utf-8") != "GET":
+            print("405 Method Not Allowed")
+            self.respond("405 Method Not Allowed")
+
         url = "www" + data[1].decode("utf-8") 
         print("URL:", url)
-        if os.path.isdir(url):
+        if os.path.isdir(url) or os.path.isfile(url):
             print('is dir!')
             if data[1].decode("utf-8") == "/":
-                print(' index')
+                print(' root')
+                file = self.readFile(url + "index.html")
+                self.respond("200 OK", file)
             else:
-                print(' not home!')
+                print(' not root!')
+                file = self.readFile(url)
+                self.respond("200 OK", file)
         else:
             print('404 Not Found')
             self.respond("404 Not Found")
 
-    def respond(self, code):
+    def readFile(self, path):
+        file = open(path).read()
+        print(file)
+        return file
+
+    def respond(self, code, file = ""):
         response = "HTTP/1.1 "
         response += code + "\r\n"
+        response += file
         self.request.sendall(bytearray(response,'utf-8'))
 
 if __name__ == "__main__":
