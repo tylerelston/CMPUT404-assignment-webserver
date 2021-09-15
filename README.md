@@ -12,6 +12,9 @@ References
 Decode bytes: Aaron Maenpaa
 https://stackoverflow.com/questions/606191/convert-bytes-to-a-string/606199#606199
 
+Extract file extension name: Martijn Pieters
+https://stackoverflow.com/a/50876887
+
 Contributors / Licensing
 ========================
 

@@ -43,15 +43,16 @@ class MyWebServer(socketserver.BaseRequestHandler):
         url = "www" + data[1].decode("utf-8") 
         print("URL:", url)
         if os.path.isdir(url) or os.path.isfile(url):
-            print('is dir!')
-            if data[1].decode("utf-8") == "/":
-                print(' root')
+            if url.endswith("/"):
                 file = self.readFile(url + "index.html")
-                self.respond("200 OK", file)
+                self.respond("200 OK", "html", file)
             else:
-                print(' not root!')
+                if not url.endswith("/") and not ".css" in url and not ".html" in url:
+                    new = url.split("/")[-1] + "/"
+                    self.respond("301 Moved Permanently", "", "", new)
+                    return
                 file = self.readFile(url)
-                self.respond("200 OK", file)
+                self.respond("200 OK", os.path.splitext(url)[-1].replace(".",""), file)
         else:
             print('404 Not Found')
             self.respond("404 Not Found")
@@ -61,10 +62,15 @@ class MyWebServer(socketserver.BaseRequestHandler):
         print(file)
         return file
 
-    def respond(self, code, file = ""):
-        response = "HTTP/1.1 "
-        response += code + "\r\n"
-        response += file
+    def respond(self, code, contentType = "", file = "", location = ""):
+        response = "HTTP/1.1 " + code + "\n"
+        if contentType:
+            response += "content-type: text/" + contentType + "\n"
+        if file:
+            response += "\n"
+            response += file
+        if location:
+            response += "location: " + location + "\n"
         self.request.sendall(bytearray(response,'utf-8'))
 
 if __name__ == "__main__":
