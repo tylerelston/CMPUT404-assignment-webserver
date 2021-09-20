@@ -63,14 +63,14 @@ class MyWebServer(socketserver.BaseRequestHandler):
         return file
 
     def respond(self, code, contentType = "", file = "", location = ""):
-        response = "HTTP/1.1 " + code + "\n"
+        response = "HTTP/1.1 " + code + "\r\n"
         if contentType:
-            response += "content-type: text/" + contentType + "\n"
+            response += "content-type: text/" + contentType + "\r\n"
         if file:
-            response += "\n"
+            response += "\r\n"
             response += file
         if location:
-            response += "location: " + location + "\n"
+            response += "location: " + location + "\r\n"
         self.request.sendall(bytearray(response,'utf-8'))
 
 if __name__ == "__main__":
