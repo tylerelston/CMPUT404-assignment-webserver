@@ -39,23 +39,23 @@ class MyWebServer(socketserver.BaseRequestHandler):
         if data[0].decode("utf-8") != "GET":
             print("405 Method Not Allowed")
             self.respond("405 Method Not Allowed")
-
-        url = "www" + data[1].decode("utf-8") 
-        print("URL:", url)
-        if os.path.isdir(url) or os.path.isfile(url):
-            if url.endswith("/"):
-                file = self.readFile(url + "index.html")
-                self.respond("200 OK", "html", file)
-            else:
-                if not url.endswith("/") and not ".css" in url and not ".html" in url:
-                    new = url.split("/")[-1] + "/"
-                    self.respond("301 Moved Permanently", "", "", new)
-                    return
-                file = self.readFile(url)
-                self.respond("200 OK", os.path.splitext(url)[-1].replace(".",""), file)
         else:
-            print('404 Not Found')
-            self.respond("404 Not Found")
+            url = "www" + data[1].decode("utf-8") 
+            print("URL:", url)
+            if os.path.isdir(url) or os.path.isfile(url):
+                if url.endswith("/"):
+                    file = self.readFile(url + "index.html")
+                    self.respond("200 OK", "html", file)
+                else:
+                    if not url.endswith("/") and not ".css" in url and not ".html" in url:
+                        new = url.split("/")[-1] + "/"
+                        self.respond("301 Moved Permanently", "", "", new)
+                        return
+                    file = self.readFile(url)
+                    self.respond("200 OK", os.path.splitext(url)[-1].replace(".",""), file)
+            else:
+                print('404 Not Found')
+                self.respond("404 Not Found")
 
     def readFile(self, path):
         file = open(path).read()
@@ -71,6 +71,7 @@ class MyWebServer(socketserver.BaseRequestHandler):
             response += file
         if location:
             response += "location: " + location + "\r\n"
+        response += "\r\n"
         self.request.sendall(bytearray(response,'utf-8'))
 
 if __name__ == "__main__":
