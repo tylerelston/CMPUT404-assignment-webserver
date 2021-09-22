@@ -66,12 +66,18 @@ class MyWebServer(socketserver.BaseRequestHandler):
         response = "HTTP/1.1 " + code + "\r\n"
         if contentType:
             response += "content-type: text/" + contentType + "\r\n"
+        else:
+            response += "content-type: application/octet-stream\r\n"
+        if location:
+            response += "location: " + location + "\r\n"
+        response += "Connection: close\r\n"
         if file:
             response += "\r\n"
             response += file
-        if location:
-            response += "location: " + location + "\r\n"
+
         response += "\r\n"
+        print("RESPONSE:")
+        print(response)
         self.request.sendall(bytearray(response,'utf-8'))
 
 if __name__ == "__main__":
