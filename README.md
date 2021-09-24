@@ -15,6 +15,9 @@ https://stackoverflow.com/questions/606191/convert-bytes-to-a-string/606199#6061
 Extract file extension name: Martijn Pieters
 https://stackoverflow.com/a/50876887
 
+HTTP1.1 Date Format: Ned Batchelder
+https://stackoverflow.com/a/225177
+
 Contributors / Licensing
 ========================
 

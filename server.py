@@ -1,5 +1,6 @@
 #  coding: utf-8 
 import socketserver, os
+from email.utils import formatdate
 
 # Copyright 2013 Abram Hindle, Eddie Antonio Santos
 # 
@@ -41,13 +42,14 @@ class MyWebServer(socketserver.BaseRequestHandler):
             self.respond("405 Method Not Allowed")
         else:
             url = "www" + data[1].decode("utf-8") 
+            url = url.replace("%20", " ")
             print("URL:", url)
             if os.path.isdir(url) or os.path.isfile(url):
                 if url.endswith("/"):
                     file = self.readFile(url + "index.html")
                     self.respond("200 OK", "html", file)
                 else:
-                    if not url.endswith("/") and not ".css" in url and not ".html" in url:
+                    if not ".css" in url and not ".html" in url:
                         new = url.split("/")[-1] + "/"
                         self.respond("301 Moved Permanently", "", "", new)
                         return
@@ -64,17 +66,18 @@ class MyWebServer(socketserver.BaseRequestHandler):
 
     def respond(self, code, contentType = "", file = "", location = ""):
         response = "HTTP/1.1 " + code + "\r\n"
+        response += "Date: " + formatdate(timeval=None, localtime=False, usegmt=True) + "\r\n"
         if contentType:
-            response += "content-type: text/" + contentType + "\r\n"
+            response += "Content-Type: text/" + contentType + "\r\n"
         else:
-            response += "content-type: application/octet-stream\r\n"
+            response += "Content-Type: application/octet-stream\r\n"
+        response += "Connection: close\r\n"
         if location:
             response += "location: " + location + "\r\n"
-        response += "Connection: close\r\n"
         if file:
+            response += "Content-Length: " + str(len(file)) + "\r\n"
             response += "\r\n"
             response += file
-
         response += "\r\n"
         print("RESPONSE:")
         print(response)
