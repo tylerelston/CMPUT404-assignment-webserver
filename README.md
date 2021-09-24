@@ -21,7 +21,7 @@ https://stackoverflow.com/a/225177
 Contributors / Licensing
 ========================
 
-Generally everything is LICENSE'D under the Apache 2 license by Tyler Elston.
+Generally everything is LICENSE'D under the Apache 2 license by Abram Hindle, Tyler Elston.
 
 server.py contains contributions from:
 
